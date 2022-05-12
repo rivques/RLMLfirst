@@ -3,19 +3,17 @@ from rlgym.envs import Match
 from rlgym_tools.sb3_utils import SB3MultipleInstanceEnv
 
 # Since we can't use the normal rlgym.make() function, we need to import all the default configuration objects to give to our Match.
-from rlgym.utils.reward_functions import CombinedReward
-from rlgym.utils.reward_functions.common_rewards.ball_goal_rewards import LiuDistanceBallToGoalReward, VelocityBallToGoalReward
-from rlgym.utils.reward_functions.common_rewards.player_ball_rewards import LiuDistancePlayerToBallReward, TouchBallReward
 from rlgym.utils.obs_builders import DefaultObs
 from rlgym.utils.state_setters import DefaultState
 from rlgym.utils.action_parsers.default_act import DefaultAction
 from rlgym.utils.terminal_conditions.common_conditions import TimeoutCondition
 
+from booststealer_reward import BooststealerReward
+
 # Finally, we import the SB3 implementation of PPO.
 from stable_baselines3.ppo import PPO
 
-reward_func = CombinedReward([LiuDistanceBallToGoalReward(), LiuDistancePlayerToBallReward(), VelocityBallToGoalReward(), TouchBallReward()], [2, 1, .5, 2])
-
+reward_func = BooststealerReward()
 #it's all in the reward func here
 
 # This is the function we need to provide to our SB3MultipleInstanceEnv to construct a match. Note that this function MUST return a Match object.
@@ -43,5 +41,5 @@ if __name__ == "__main__":
     """
     env = SB3MultipleInstanceEnv(match_func_or_matches=get_match, num_instances=4, wait_time=20)
     learner = PPO(policy="MlpPolicy", env=env, verbose=1)
-    learner.learn(50_000_000)
+    learner.learn(890*60*3) #only train for 3 minutes to test
     learner.save("ppo_boost_bot")
