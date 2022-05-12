@@ -16,6 +16,8 @@ from stable_baselines3.ppo import PPO
 
 reward_func = CombinedReward([LiuDistanceBallToGoalReward(), LiuDistancePlayerToBallReward(), VelocityBallToGoalReward(), TouchBallReward()], [2, 1, .5, 2])
 
+#it's all in the reward func here
+
 # This is the function we need to provide to our SB3MultipleInstanceEnv to construct a match. Note that this function MUST return a Match object.
 def get_match():
     
@@ -42,3 +44,4 @@ if __name__ == "__main__":
     env = SB3MultipleInstanceEnv(match_func_or_matches=get_match, num_instances=4, wait_time=20)
     learner = PPO(policy="MlpPolicy", env=env, verbose=1)
     learner.learn(50_000_000)
+    learner.save("ppo_boost_bot")
