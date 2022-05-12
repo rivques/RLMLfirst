@@ -6,7 +6,7 @@ from rlgym_tools.sb3_utils import SB3MultipleInstanceEnv
 from rlgym.utils.obs_builders import DefaultObs
 from rlgym.utils.state_setters import DefaultState
 from rlgym.utils.action_parsers.default_act import DefaultAction
-from rlgym.utils.terminal_conditions.common_conditions import TimeoutCondition
+from rlgym.utils.terminal_conditions.common_conditions import TimeoutCondition, GoalScoredCondition
 
 from booststealer_reward import BooststealerReward
 
@@ -23,7 +23,7 @@ def get_match():
     return Match(
         action_parser=DefaultAction(),
         reward_function=reward_func,
-        terminal_conditions=[TimeoutCondition(225)],
+        terminal_conditions=[TimeoutCondition(225), GoalScoredCondition()],
         obs_builder=DefaultObs(),
         state_setter=DefaultState(),
         
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         but the easiest solution is to delay for some period of time between launching clients. The amount of required delay will depend on your hardware, so make sure to change this number if your Rocket League
         clients are crashing before they fully launch.
     """
-    env = SB3MultipleInstanceEnv(match_func_or_matches=get_match, num_instances=4, wait_time=20)
+    env = SB3MultipleInstanceEnv(match_func_or_matches=get_match, num_instances=2, wait_time=20)
     learner = PPO(policy="MlpPolicy", env=env, verbose=1)
-    learner.learn(890*60*3) #only train for 3 minutes to test
+    learner.learn(300*60*20) #only train for 20 minutes to test
     learner.save("ppo_boost_bot")
