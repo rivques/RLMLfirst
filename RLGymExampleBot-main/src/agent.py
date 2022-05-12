@@ -1,5 +1,5 @@
-# import os
-
+import os
+from stable_baselines3 import PPO
 
 class Agent:
     def __init__(self):
@@ -12,9 +12,10 @@ class Agent:
         # with open(os.path.join(cur_dir, 'model.p'), 'rb') as file:
         #     model = pickle.load(file)
         # self.actor.load_state_dict(model)
-        pass
+        cur_dir = os.path.dirname(os.path.realpath(__file__))
+        self.actor = PPO.load(cur_dir + "\\ppo_boost_bot")
 
     def act(self, state):
         # Evaluate your model here
-        action = [1, 0, 0, 0, 0, 0, 0, 0]
+        action = self.actor.predict(state)
         return action
