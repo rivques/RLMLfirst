@@ -41,5 +41,5 @@ if __name__ == "__main__":
     """
     env = SB3MultipleInstanceEnv(match_func_or_matches=get_match, num_instances=2, wait_time=20)
     learner = PPO(policy="MlpPolicy", env=env, verbose=1)
-    learner.learn(300*60*20) #only train for 20 minutes to test
+    learner.learn(300*60*300)
     learner.save("ppo_boost_bot")
